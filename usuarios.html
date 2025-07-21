@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Cuentas de Usuario</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
+    <h1 class="text-2xl font-bold mb-4">Gestión de Cuentas de Usuario</h1>
+
+    <!-- Formulario de registro -->
+    <form id="userForm" class="mb-6 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input type="text" id="username" placeholder="Nombre de usuario" required class="p-2 border rounded" />
+        <input type="email" id="email" placeholder="Correo electrónico" required class="p-2 border rounded" />
+        <input type="password" id="password" placeholder="Contraseña" required class="p-2 border rounded" />
+      </div>
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Agregar Usuario</button>
+    </form>
+
+    <!-- Tabla de usuarios -->
+    <table class="w-full text-left border border-gray-300">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="p-2 border">Usuario</th>
+          <th class="p-2 border">Correo</th>
+          <th class="p-2 border">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!-- Los usuarios se insertan aquí con JavaScript -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Script básico para manejar usuarios en memoria -->
+  <script>
+    const userForm = document.getElementById('userForm');
+    const userTableBody = document.getElementById('userTableBody');
+    let users = [];
+
+    userForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      users.push({ username, email, password });
+      renderTable();
+      userForm.reset();
+    });
+
+    function renderTable() {
+      userTableBody.innerHTML = '';
+      users.forEach((user, index) => {
+        const row = `
+          <tr>
+            <td class="p-2 border">${user.username}</td>
+            <td class="p-2 border">${user.email}</td>
+            <td class="p-2 border space-x-2">
+              <button onclick="editUser(${index})" class="text-blue-600 hover:underline">Editar</button>
+              <button onclick="deleteUser(${index})" class="text-red-600 hover:underline">Eliminar</button>
+            </td>
+          </tr>
+        `;
+        userTableBody.innerHTML += row;
+      });
+    }
+
+    function deleteUser(index) {
+      users.splice(index, 1);
+      renderTable();
+    }
+
+    function editUser(index) {
+      const user = users[index];
+      document.getElementById('username').value = user.username;
+      document.getElementById('email').value = user.email;
+      document.getElementById('password').value = user.password;
+      deleteUser(index);
+    }
+  </script>
+</body>
+</html>
